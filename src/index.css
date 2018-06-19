@@ -1,0 +1,10 @@
+input{
+    outline: none;
+    border-width: 0px !important;
+    width: 100%;
+    height: 84px;
+}
+
+.body-background-color{
+    background-color: rgb(241, 242, 245);
+}
