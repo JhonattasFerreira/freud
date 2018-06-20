@@ -1,12 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import SearchInput from './components/SearchInput.js';
+
+function App(){
+    return(
+    <SearchInput retorno={cb} />
+    )
+}
+
+function cb(urlGithub){
+    let a = urlGithub;
+}
 
 ReactDOM.render(
-    <div class="col-md-12">
-        <form>        
-            <input type="text" name="name" />        
-        </form>
-    </div>,
+    <App />,
     document.getElementById('root')
   );
