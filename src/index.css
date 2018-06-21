@@ -2,7 +2,11 @@ input{
     outline: none;
     border-width: 0px !important;
     width: 100%;
-    height: 84px;
+    height: 42px;
+}
+
+.repo-input {
+    color: gray
 }
 
 .body-background-color{
