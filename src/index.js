@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import SearchInput from './components/SearchInput.js';
 import PullRequestMergeTime from './components/PullRequestMergeTime.js';
+import IssueCloseTime from './components/IssueCloseTime.js';
+
 
 class App extends React.Component {    
     constructor(props){
@@ -22,6 +24,7 @@ class App extends React.Component {
                 </div>
                 <div class="row">
                     <PullRequestMergeTime url={this.state.urlGithub} />
+                    <IssueCloseTime url={this.state.urlGithub} />
                 </div>
             </div>
         );        
