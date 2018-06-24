@@ -5,6 +5,7 @@ import SearchInput from './components/SearchInput.js';
 import PullRequestMergeTime from './components/PullRequestMergeTime.js';
 import IssueCloseTime from './components/IssueCloseTime.js';
 import PullRequestSize from './components/PullRequestSize.js';
+import PullRequestByDay from './components/PullRequestByDay';
 
 class App extends React.Component {    
     constructor(props){
@@ -28,7 +29,8 @@ class App extends React.Component {
                
                     <PullRequestSize url={this.state.urlGithub} />                    
                     <PullRequestMergeTime url={this.state.urlGithub} />
-                    <IssueCloseTime url={this.state.urlGithub} /> 
+                    <IssueCloseTime url={this.state.urlGithub} />  
+                    <PullRequestByDay url={this.state.urlGithub} />
                          
                 </div>
                 ):(<span></span>)
