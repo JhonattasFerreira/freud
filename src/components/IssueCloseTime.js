@@ -4,13 +4,17 @@ export default class IssueCloseTime extends React.Component {
     constructor(props){
         super(props);
 
-        this.state = {day: 0, hour: 0, minute: 0,flag:true};
+        this.state = {day: 0, hour: 0, minute: 0};
     }
 
     componentDidUpdate() {
+        
+    }
+
+    componentDidMount(){
         var self = this;
-        if(this.props.url != null && this.props.url != '' && self.state.flag) {
-            self.setState({flag: false})       
+        if(this.props.url != null && this.props.url != '') {
+                   
             let promisse = this.getIssueData(this.props.url,self);
             promisse.then(result => {
                 
@@ -26,7 +30,6 @@ export default class IssueCloseTime extends React.Component {
             let totalHours = 0;
             let xhr = new XMLHttpRequest();
             xhr.open("GET",url + "/issues?state=closed&page=" + page + "&per_page=100");
-
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4) {
                     if(xhr.status == 200){

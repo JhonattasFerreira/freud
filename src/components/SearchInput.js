@@ -39,7 +39,6 @@ export default class SearchInput extends React.Component {
             let xhr = new XMLHttpRequest();
 
             xhr.open("GET",url,false);
-
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4) {
                     if(xhr.status == 200){
@@ -64,8 +63,8 @@ export default class SearchInput extends React.Component {
         <div class="col-md-12">
             <div class="shadow-component">
             <form onSubmit={this.handleSubmit}>        
-                <input type="text" name="name" value={this.state.ownerValue} onChange={this.handleOwnerChange}/>
-                <input class="repo-input" type="text" name="name" value={this.state.repoValue} onChange={this.handleRepoChange}/>
+                <input placeholder="Owner" type="text" name="name" value={this.state.ownerValue} onChange={this.handleOwnerChange}/>
+                <input placeholder="Repo" class="repo-input" type="text" name="name" value={this.state.repoValue} onChange={this.handleRepoChange}/>
                 <input type="submit" value="Submit" hidden/>                
             </form>
             </div>
