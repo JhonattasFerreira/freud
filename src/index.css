@@ -44,3 +44,11 @@ input{
     line-height: 2.7em;
     font-size: 70px;
 }
+
+
+.body-component-12{
+    height: 30em;
+    background-color: white;
+    border-top: 1px solid;
+    border-color: #bec2ce;
+}

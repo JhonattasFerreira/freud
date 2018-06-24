@@ -4,7 +4,7 @@ import './index.css';
 import SearchInput from './components/SearchInput.js';
 import PullRequestMergeTime from './components/PullRequestMergeTime.js';
 import IssueCloseTime from './components/IssueCloseTime.js';
-
+import PullRequestSize from './components/PullRequestSize.js';
 
 class App extends React.Component {    
     constructor(props){
@@ -17,15 +17,22 @@ class App extends React.Component {
     }
 
     render(){
+        const teste = this.state.urlGithub;
         return(
             <div class="container-fluid">
                 <div class="row">
                     <SearchInput retorno={this.cb.bind(this)} />
                 </div>
+                {teste != '' ?(
                 <div class="row">
+               
+                    <PullRequestSize url={this.state.urlGithub} />                    
                     <PullRequestMergeTime url={this.state.urlGithub} />
-                    <IssueCloseTime url={this.state.urlGithub} />
+                    <IssueCloseTime url={this.state.urlGithub} /> 
+                         
                 </div>
+                ):(<span></span>)
+            }                  
             </div>
         );        
     }
