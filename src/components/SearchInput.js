@@ -24,6 +24,7 @@ export default class SearchInput extends React.Component {
             alert("É necessário passar o proprietário e o repositório.");
         }else{           
             let url = "https://api.github.com/repos/" + this.state.ownerValue + "/" + this.state.repoValue;
+            
             let self = this;            
             let promise = this.validateUrl(url,self);
             promise.then(
@@ -37,8 +38,9 @@ export default class SearchInput extends React.Component {
       validateUrl(url, self) {
           return new Promise((resolve, reject) =>{
             let xhr = new XMLHttpRequest();
-
+            
             xhr.open("GET",url,false);
+            xhr.setRequestHeader('Authorization', 'Bearer ' + 'c70e2543d1a6b4221c39422426de42f4e325ae36');
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4) {
                     if(xhr.status == 200){

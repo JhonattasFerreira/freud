@@ -52,3 +52,13 @@ input{
     border-top: 1px solid;
     border-color: #bec2ce;
 }
+
+.font-size-loading{
+    font-size: 70px;
+}
+
+.body-loading{
+    text-align: center;
+    vertical-align: middle;
+    line-height: 30em;
+}

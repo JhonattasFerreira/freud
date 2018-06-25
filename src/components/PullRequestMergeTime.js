@@ -4,18 +4,30 @@ export default class PullRequestMergeTime extends React.Component {
     constructor(props){
         super(props);
 
-        this.state = {day: 0, hour: 0, minute: 0};
+        this.state = {day: 0, hour: 0, minute: 0, isLoading: true};
     }
 
-    componentDidUpdate() {
-        
+    componentDidUpdate(oldUrl) {
+        if(this.props.url != oldUrl.url) {
+
+            this.setState({isLoading: true});
+            var self = this;
+            let url = this.props.url + "/pulls?state=closed&page=";
+
+            let promisse = this.getPullRequestData(url,self);
+            promisse.then(result => {
+                this.setState({isLoading: false});
+            });
+        }
     }
     componentDidMount(){
         var self = this;
-        if(this.props.url != null && this.props.url != '') {                   
-            let promisse = this.getPullRequestData(this.props.url,self);
+        if(this.props.url != null && this.props.url != '') {
+            let url = this.props.url + "/pulls?state=closed&page=";
+
+            let promisse = this.getPullRequestData(url,self);
             promisse.then(result => {
-                
+                this.setState({isLoading: false});
             });
         }
     }
@@ -27,7 +39,8 @@ export default class PullRequestMergeTime extends React.Component {
             let quantity = 0;
             let totalHours = 0;
             let xhr = new XMLHttpRequest();
-            xhr.open("GET",url + "/pulls?state=closed&page=" + page + "&per_page=100");
+            xhr.open("GET", url + page + "&per_page=100");
+            xhr.setRequestHeader('Authorization', 'Bearer ' + 'c70e2543d1a6b4221c39422426de42f4e325ae36');
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4) {
                     if(xhr.status == 200){
@@ -50,7 +63,8 @@ export default class PullRequestMergeTime extends React.Component {
                             });
 
                             page = page + 1;
-                            xhr.open("GET", url + "/pulls?state=closed&page=" + page + "&per_page=100");
+                            xhr.open("GET", url + page + "&per_page=100");
+                            xhr.setRequestHeader('Authorization', 'Bearer ' + 'c70e2543d1a6b4221c39422426de42f4e325ae36');
                             xhr.send();
                         }
                         else{
@@ -80,6 +94,7 @@ export default class PullRequestMergeTime extends React.Component {
     }
 
     render(){
+        const isLoading = this.state.isLoading;
         return (
         <div class="col-md-6">
             <div class="shadow-component">
@@ -88,8 +103,8 @@ export default class PullRequestMergeTime extends React.Component {
                 </div>
                 <div class="body-component-6">
                     <div class="information-average">
-                        <span>{this.state.day} day </span>
-                        <span>{this.state.hour}h{this.state.minute}m</span>                        
+                    {isLoading ? (<div>Loading...</div>):(<div><span>{this.state.day} day </span>
+                        <span>{this.state.hour}h{this.state.minute}m</span></div>)}                       
                     </div>
                 </div>
             </div>            
