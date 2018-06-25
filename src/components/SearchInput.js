@@ -40,7 +40,6 @@ export default class SearchInput extends React.Component {
             let xhr = new XMLHttpRequest();
             
             xhr.open("GET",url,false);
-            xhr.setRequestHeader('Authorization', 'Bearer ' + 'c70e2543d1a6b4221c39422426de42f4e325ae36');
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4) {
                     if(xhr.status == 200){
@@ -52,8 +51,7 @@ export default class SearchInput extends React.Component {
                         resolve(output);
                     } else{
                         reject(alert("É necessário passar o proprietário e o repositório válidos."));
-                    }
-                    
+                    }                    
                 }
             }
             xhr.send();

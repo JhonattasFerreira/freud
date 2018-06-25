@@ -11,9 +11,9 @@ export default class PullRequestByDay extends React.Component {
         if(this.props.url != oldUrl.url) {
 
             this.setState({isLoading: true});
-            var self = this;
+            let self = this;
             
-            let url = this.props.url + "/pulls?state=all&direction=desc&page=";
+            let url = this.props.url + "/pulls?state=all&direction=desc&page=1&per_page=100";
             let promisse = this.getPullRequestData(url, self);
             promisse.then(result => {
                 this.setState({isLoading: false});
@@ -22,12 +22,12 @@ export default class PullRequestByDay extends React.Component {
         }
     }
 
-    componentDidMount() {
+    componentDidMount() {        
+        let self = this;
         
-        var self = this;
         if (this.props.url != null && this.props.url != '') {
             
-            let url = this.props.url + "/pulls?state=all&direction=desc&page=";
+            let url = this.props.url + "/pulls?state=all&direction=desc&page=1&per_page=100";
             let promisse = this.getPullRequestData(url, self);
             promisse.then(result => {
                 this.setState({isLoading: false});
@@ -41,12 +41,10 @@ export default class PullRequestByDay extends React.Component {
             let endDate = new Date();
             let initialDate = new Date(new Date().setDate(new Date().getDate() - 30));
 
-            let page = 1;
-            let dates = {}
+            let dates = {};
 
             let xhr = new XMLHttpRequest();
-            xhr.open("GET", url + page + "&per_page=100");
-            xhr.setRequestHeader('Authorization', 'Bearer ' + 'c70e2543d1a6b4221c39422426de42f4e325ae36');
+            xhr.open("GET", url);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
@@ -54,23 +52,16 @@ export default class PullRequestByDay extends React.Component {
 
                         if (dataPullRequest != null && dataPullRequest.length > 0) {
                             dates = self.getPullRequestDates(dataPullRequest, initialDate, endDate, self);
-
-                            page = page + 1;
-                            xhr.open("GET", url + page + "&per_page=100");
-                            xhr.setRequestHeader('Authorization', 'Bearer ' + 'c70e2543d1a6b4221c39422426de42f4e325ae36');
-                            xhr.send();
-                        } else {
                             let data = self.orderDates(dates);
                             let output = {
                                 "data": data,
                                 "self": self
                             }
-                            resolve(output)
-                        }
+                            resolve(output);                         
+                        } 
                     }
                 }
             }
-
             xhr.send();
         });
     }
@@ -104,7 +95,6 @@ export default class PullRequestByDay extends React.Component {
                 dates[fomatedDated].created += 1
             }
         }
-
     }
 
     getPullRequestClosedDate(date, initialDate, endDate, dates) {
@@ -149,10 +139,10 @@ export default class PullRequestByDay extends React.Component {
     }
 
     orderDates(dates) {
-        var days = [];
-        var created = [];
-        var closed = [];
-        var merged = [];
+        let days = [];
+        let created = [];
+        let closed = [];
+        let merged = [];
 
         Object.keys(dates)
             .sort()
@@ -173,8 +163,8 @@ export default class PullRequestByDay extends React.Component {
     }
 
     makeChart(data) {
-        var ctxL = document.getElementById("lineChart").getContext('2d');
-        var myLineChart = new window.Chart(ctxL, {
+        let ctxL = document.getElementById("lineChart").getContext('2d');
+        let myLineChart = new window.Chart(ctxL, {
             type: 'line',
             data: {
                 labels: data.days,

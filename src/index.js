@@ -27,10 +27,10 @@ class App extends React.Component {
                 {teste != '' ?(
                 <div class="row">
                
-                    <PullRequestSize url={this.state.urlGithub} />                    
-                    <PullRequestMergeTime url={this.state.urlGithub} />
-                    <IssueCloseTime url={this.state.urlGithub} />  
-                    <PullRequestByDay url={this.state.urlGithub} />
+                    <PullRequestSize url={this.state.urlGithub} />                  
+                    <PullRequestMergeTime url={this.state.urlGithub} /> 
+                    <IssueCloseTime url={this.state.urlGithub} />   
+                    <PullRequestByDay url={this.state.urlGithub} /> 
                          
                 </div>
                 ):(<span></span>)
@@ -39,8 +39,6 @@ class App extends React.Component {
         );        
     }
 }
-
-
 
 ReactDOM.render(
     <App />,
