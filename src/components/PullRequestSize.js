@@ -12,8 +12,8 @@ export default class PullRequestSize extends React.Component {
         if(this.props.url != oldUrl.url) {
 
             this.setState({isLoading: true});
-            var self = this;
-            let url = this.props.url + "/pulls?state=closed&page="
+            let self = this;
+            let url = this.props.url + "/pulls?state=closed&direction=desc&page=1&per_page=100";
             let promisseUrls = this.getPullRequestUrls(url,self);
             promisseUrls.then(result => {
                 
@@ -27,9 +27,9 @@ export default class PullRequestSize extends React.Component {
     }
 
     componentDidMount(){
-        var self = this;
+        let self = this;
         if(this.props.url != null && this.props.url != '') {
-            let url = this.props.url + "/pulls?state=closed&page="
+            let url = this.props.url + "/pulls?state=closed&direction=desc&page=1&per_page=100";
 
             let promisseUrls = this.getPullRequestUrls(url,self);
             promisseUrls.then(result => {
@@ -48,56 +48,34 @@ export default class PullRequestSize extends React.Component {
         return new Promise((resolve, reject) =>{
         let quantitySmall = 0;
         let totalDaysSmall = 0;
+
         let quantityMedium = 0;
         let totalDaysMedium = 0;
+
         let quantitylarge = 0;
         let totalDaysLarge = 0;
         urls.forEach(url => {
             let request = new XMLHttpRequest();
             request.open("GET", url,false);
-            request.setRequestHeader('Authorization', 'Bearer ' + 'c70e2543d1a6b4221c39422426de42f4e325ae36');
             request.onreadystatechange = function() {
 
                 if(request.readyState === XMLHttpRequest.DONE && request.status === 200) {
-                    var data = JSON.parse(request.responseText);
+                    let data = JSON.parse(request.responseText);
                     let totalLines = data.additions + data.deletions;
 
                     if(totalLines <= 100){
-                        quantitySmall += 1;
-                        let createdDate = new Date(data.created_at);
-                        let endDate = new Date(data.merged_at);
-                        if(data.merged_at == null){
-                            endDate = new Date(data.closed_at);
-                        } 
-                        let timeDiff = Math.abs(endDate.getTime() - createdDate.getTime());
-                        let diffhours = timeDiff/1000/60/60;
+                        quantitySmall += 1;                        
+                        let diffhours = self.calculateHours(data.created_at,data.closed_at,data.merged_at);
                         totalDaysSmall = totalDaysSmall + diffhours;
-                
                     }
                     else if(totalLines <= 1000){
-                        quantityMedium += 1;
-                        let createdDate = new Date(data.created_at);
-                        let endDate = new Date(data.merged_at);
-                        if(data.merged_at == null){
-                            endDate = new Date(data.closed_at);
-                        }               
-                     
-                        let timeDiff = Math.abs(endDate.getTime() - createdDate.getTime());
-                        let diffhours = timeDiff/1000/60/60;
+                        quantityMedium += 1;                        
+                        let diffhours = self.calculateHours(data.created_at,data.closed_at,data.merged_at);
                         totalDaysMedium = totalDaysMedium + diffhours;
-                        
                     }
                     else{
                         quantitylarge += 1;
-                        let createdDate = new Date(data.created_at);
-                        let endDate = new Date(data.merged_at);
-                        if(data.merged_at == null){
-                            endDate = new Date(data.closed_at);
-                        }
-                
-
-                        let timeDiff = Math.abs(endDate.getTime() - createdDate.getTime());
-                        let diffhours = timeDiff/1000/60/60;
+                        let diffhours = self.calculateHours(data.created_at,data.closed_at,data.merged_at);
                         totalDaysLarge = totalDaysLarge + diffhours;
                     }
                 }
@@ -106,9 +84,9 @@ export default class PullRequestSize extends React.Component {
             request.send();
         });
 
-        let averageSmall = totalDaysSmall/quantitySmall == NaN ? 0 : parseFloat((totalDaysSmall/quantitySmall).toFixed(2));
-        let averageMedium = totalDaysMedium/quantityMedium == NaN ? 0 : parseFloat((totalDaysMedium/quantityMedium).toFixed(2));
-        let averageLarge = totalDaysLarge/quantitylarge == NaN ? 0 : parseFloat((totalDaysLarge/quantitylarge).toFixed(2));
+        let averageSmall = self.calculateAveragePullRequestSize(totalDaysSmall,quantitySmall);
+        let averageMedium = self.calculateAveragePullRequestSize(totalDaysMedium,quantityMedium);
+        let averageLarge = self.calculateAveragePullRequestSize(totalDaysLarge,quantitylarge);
 
         let data = {"averageSmall":averageSmall,"averageMedium":averageMedium,"averageLarge":averageLarge};
 
@@ -120,57 +98,69 @@ export default class PullRequestSize extends React.Component {
         resolve(output)
         });
                              
-    }
+    }    
 
     getPullRequestUrls(url,self){
         return new Promise((resolve, reject) =>{
-        let page = 1;       
-
         let urls = [];
+        let endDate = new Date();
+        let initialDate = new Date(new Date().setDate(new Date().getDate() - 30));
 
         let xhr = new XMLHttpRequest();
-        xhr.open("GET",url + page + "&per_page=100");
-        xhr.setRequestHeader('Authorization', 'Bearer ' + 'c70e2543d1a6b4221c39422426de42f4e325ae36');
+        xhr.open("GET",url);
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4) {
                 if(xhr.status == 200){
                     let dataPullRequest = JSON.parse(xhr.responseText);
 
-                    if (dataPullRequest != null && dataPullRequest.length > 0) {
-                        
+                    if (dataPullRequest != null && dataPullRequest.length > 0) {                        
                         dataPullRequest.forEach(pullRequest => {
-                            urls = urls.concat(pullRequest.url);
-                        });
 
-                        page = page + 1;
-                        xhr.open("GET", url + page + "&per_page=100");
-                        xhr.setRequestHeader('Authorization', 'Bearer ' + 'c70e2543d1a6b4221c39422426de42f4e325ae36');
-                        xhr.send();
-                    }
-                    else{
+                            let date = new Date(pullRequest.closed_at).getTime();
+                            if(date <= endDate.getTime() && date >= initialDate.getTime()){
+                                urls = urls.concat(pullRequest.url);
+                            }
+                            
+                        }); 
+                        
                         let output = {
                             urls: urls,
                             self: self  
                         }                       
                         resolve(output);
-                    } 
+                    }                    
                 }
             }
         }
-
         xhr.send();
     });
     }
 
+
+    calculateHours(created, closed, merged){
+        let createdDate = new Date(created);
+        let endDate = new Date(merged);
+        if(merged == null){
+            endDate = new Date(closed);
+        } 
+        let timeDiff = Math.abs(endDate.getTime() - createdDate.getTime());
+        let diffhours = timeDiff/1000/60/60;
+        return diffhours;
+    }
+
+    calculateAveragePullRequestSize(days, quantity){
+        return days/quantity == NaN ? 0 : parseFloat((days/quantity).toFixed(2));
+    }
+
     makeChart(datas){
-        var ctx = document.getElementById("myChart").getContext('2d');
+        let ctx = document.getElementById("myChart").getContext('2d');
       
-        var myChart = new window.Chart(ctx, {
+        let myChart = new window.Chart(ctx, {
             type: 'bar',
             data: {
                 labels: ["Small", "Medium", "Large"],
                 datasets: [{
-                    label: '# of Votes',
+                    label: 'Pull Request Merge Time',
                     data: [datas.averageSmall, datas.averageMedium, datas.averageLarge],
                     backgroundColor: [                        
                         'rgba(54, 162, 235)',
