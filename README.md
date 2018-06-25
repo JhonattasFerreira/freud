@@ -20,6 +20,10 @@ npm start
 
 A aplicação vai iniciar em localhost:3000
 
+## Atenção
+
+A API do GitHub V3 permite apenas 60 requisições por hora para um mesmo IP.
+
 ## Feito com
 
 * [React](https://reactjs.org/) - A JavaScript library for building user interfaces.
