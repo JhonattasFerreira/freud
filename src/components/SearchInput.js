@@ -29,7 +29,7 @@ export default class SearchInput extends React.Component {
             let promise = this.validateUrl(url,self);
             promise.then(
                 result => {
-                    result.self.props.retorno(result.url);
+                    result.self.props.callback(result.url);
                 }
             )            
         }

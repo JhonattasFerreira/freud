@@ -18,13 +18,13 @@ class App extends React.Component {
     }
 
     render(){
-        const teste = this.state.urlGithub;
+        const hasUrlGithub = this.state.urlGithub;
         return(
             <div class="container-fluid">
                 <div class="row">
-                    <SearchInput retorno={this.cb.bind(this)} />
+                    <SearchInput callback={this.cb.bind(this)} />
                 </div>
-                {teste != '' ?(
+                {hasUrlGithub != '' ?(
                 <div class="row">
                
                     <PullRequestSize url={this.state.urlGithub} />                  
