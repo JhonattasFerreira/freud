@@ -3,14 +3,34 @@ import React from 'react';
 export default class PullRequestByDay extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {isLoading: true};
     }
 
-    componentDidMount() {
-        var self = this;
-        if (this.props.url != null && this.props.url != '') {
+    componentDidUpdate(oldUrl) {
+        if(this.props.url != oldUrl.url) {
+
+            this.setState({isLoading: true});
+            var self = this;
+            
             let url = this.props.url + "/pulls?state=all&direction=desc&page=";
             let promisse = this.getPullRequestData(url, self);
             promisse.then(result => {
+                this.setState({isLoading: false});
+                result.self.makeChart(result.data);
+            });
+        }
+    }
+
+    componentDidMount() {
+        
+        var self = this;
+        if (this.props.url != null && this.props.url != '') {
+            
+            let url = this.props.url + "/pulls?state=all&direction=desc&page=";
+            let promisse = this.getPullRequestData(url, self);
+            promisse.then(result => {
+                this.setState({isLoading: false});
                 result.self.makeChart(result.data);
             });
         }
@@ -26,6 +46,7 @@ export default class PullRequestByDay extends React.Component {
 
             let xhr = new XMLHttpRequest();
             xhr.open("GET", url + page + "&per_page=100");
+            xhr.setRequestHeader('Authorization', 'Bearer ' + 'c70e2543d1a6b4221c39422426de42f4e325ae36');
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
@@ -36,6 +57,7 @@ export default class PullRequestByDay extends React.Component {
 
                             page = page + 1;
                             xhr.open("GET", url + page + "&per_page=100");
+                            xhr.setRequestHeader('Authorization', 'Bearer ' + 'c70e2543d1a6b4221c39422426de42f4e325ae36');
                             xhr.send();
                         } else {
                             let data = self.orderDates(dates);
@@ -187,15 +209,25 @@ export default class PullRequestByDay extends React.Component {
     }
 
     render(){
+        const isLoading = this.state.isLoading;
         return (
         <div class="col-md-12">
             <div class="shadow-component">
                 <div class="head-component-6">
                     <span class="text-head">Month Sumary</span>
                 </div>
-                <div class="body-component-12">
-                    <canvas id="lineChart" height="180" width="500"></canvas>
-                </div>
+                {isLoading ? 
+                    (
+                        <div class="body-component-12 body-loading">
+                            <span class="font-size-loading">Loading...</span>                 
+                        </div>
+                    ):
+                    ( 
+                        <div class="body-component-12">
+                            <canvas id="lineChart" height="180" width="500"></canvas>
+                        </div>
+                    )
+                }
             </div>            
         </div>
         );
