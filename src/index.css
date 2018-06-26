@@ -3,6 +3,7 @@ input{
     border-width: 0px !important;
     width: 100%;
     height: 3em;
+    padding-left: 15px
 }
 
 .repo-input {
@@ -62,3 +63,13 @@ input{
     vertical-align: middle;
     line-height: 30em;
 }
+
+.margin-top-12{
+    margin-top: 12px;
+}
+
+.margin-bottom-12{
+    margin-bottom: 12px;
+}
+
+
