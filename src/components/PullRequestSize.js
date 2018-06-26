@@ -204,7 +204,7 @@ export default class PullRequestSize extends React.Component {
                     ):
                     ( 
                         <div class="body-component-12">
-                            <canvas id="myChart" height="180" width="500"></canvas>
+                            <canvas id="myChart" height="120" width="500"></canvas>
                         </div>
                     )
                 }

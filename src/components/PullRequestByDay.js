@@ -201,7 +201,7 @@ export default class PullRequestByDay extends React.Component {
     render(){
         const isLoading = this.state.isLoading;
         return (
-        <div class="col-md-12">
+        <div class="col-md-12 margin-bottom-12">
             <div class="shadow-component">
                 <div class="head-component-6">
                     <span class="text-head">Month Sumary</span>
@@ -214,7 +214,7 @@ export default class PullRequestByDay extends React.Component {
                     ):
                     ( 
                         <div class="body-component-12">
-                            <canvas id="lineChart" height="180" width="500"></canvas>
+                            <canvas id="lineChart" height="120" width="500"></canvas>
                         </div>
                     )
                 }

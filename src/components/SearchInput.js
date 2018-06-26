@@ -61,7 +61,7 @@ export default class SearchInput extends React.Component {
     render(){
         return (
         <div class="col-md-12">
-            <div class="shadow-component">
+            <div class="shadow-component margin-top-12">
             <form onSubmit={this.handleSubmit}>        
                 <input placeholder="Owner" type="text" name="name" value={this.state.ownerValue} onChange={this.handleOwnerChange}/>
                 <input placeholder="Repo" class="repo-input" type="text" name="name" value={this.state.repoValue} onChange={this.handleRepoChange}/>
